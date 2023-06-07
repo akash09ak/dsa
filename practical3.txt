@@ -1,0 +1,563 @@
+
+
+#include<iostream>
+#include<string.h>
+using namespace std;
+struct GTnode
+{
+  char label[30];
+  int child_count;
+  struct GTnode *child[10];
+};
+class library
+{
+public:
+  struct GTnode *root;
+  int chapCount = 0, secCount = 0;
+
+    library ()
+  {
+    root = NULL;
+  }
+
+  void create ();
+  void display (struct GTnode *);
+  void search (struct GTnode *t, char key[], int);
+  void del (struct GTnode *t, char key[], int type);
+  void insert (struct GTnode *t, char a[], char b[], int);
+
+  ~library ()
+  {
+    delete root;
+  }
+};
+
+void
+library::create ()
+{
+  struct GTnode *book = new GTnode;
+  root = book;
+
+  cout << "\nEnter the name of the book : ";
+  cin >> book->label;
+
+  cout << "\n\tEnter the number of chapters : ";
+  cin >> book->child_count;
+  chapCount = book->child_count;
+
+  for (int i = 0; i < book->child_count; i++)
+    {
+      book->child[i] = new GTnode;
+
+      cout << "\n\tEnter the name of the chapter " << i + 1 << ": ";
+      cin >> book->child[i]->label;
+
+      cout << "\n\t\tEnter the number of sections : ";
+      cin >> book->child[i]->child_count;
+      secCount += book->child[i]->child_count;
+      for (int j = 0; j < book->child[i]->child_count; j++)
+	{
+	  book->child[i]->child[j] = new GTnode;
+	  cout << "\n\t\tEnter the name of the section " << j + 1 << ": ";
+	  cin >> book->child[i]->child[j]->label;
+	}
+    }
+}
+
+void
+library::insert (struct GTnode *t, char chapName[], char secName[], int type)
+{
+  int i, flagChap = 0, flagSec = 0;
+  if (type == 1)
+    {
+      t->child[t->child_count] = new GTnode;
+      strcpy (t->child[t->child_count] ->label, chapName);
+      flagChap = 1;
+    }
+  if (type == 2)
+    {
+      for (i = 0; i < t->child_count; i++)
+	{
+	  if (!strcmp (t->child[i]->label, chapName))
+	    {
+	      flagSec = 1;
+	      t->child[i]->child[t->child[i] ->child_count] = new GTnode;
+	      strcpy (t->child[i]->child[t->child[i] ->child_count]->label, secName);
+	      break;
+	    }
+
+	}
+      if (flagSec == 0)
+	{
+	  cout << "\nSince Chapter not found :";
+	}
+    }
+
+  if (type == 2)
+    {
+      if (flagSec == 1)
+	{
+	  t->child[i]->child_count++;
+	  secCount++;
+	  cout << "\nSection Inserted successfully ";
+	}
+      else
+	{
+	  cout << "\nInsertion unsuccessful ";
+	}
+    }
+  else if (type == 1)
+    {
+      if (flagChap == 1)
+	{
+	  t->child_count++;
+	  chapCount++;
+	  cout << "\nChapter Inserted successfully ";
+	}
+      else
+	{
+	  cout << "\nInsertion unsuccessful ";
+	}
+
+    }
+}
+
+void
+library::search (struct GTnode *t, char key[], int type)
+{
+  int flagChap = 0, flagSec = 0;
+
+  for (int i = 0; i < t->child_count; i++)
+    {
+      if (type == 1)
+	if (!strcmp (t->child[i]->label, key))
+	  {
+	    flagChap = 1;
+	    cout << "\nChapter found as per the following hierarchy : ";
+	    cout << "\nBook : " << t ->label << "\n\tChapter : " << t->child[i]->label;
+	    break;
+	  }
+      if (type == 2)
+	for (int j = 0; j < t->child[i]->child_count; j++)
+	  {
+	    if (!strcmp (t->child[i]->child[j] ->label, key))
+	      {
+		flagSec = 1;
+		cout << "\nSection found as per the following hierarchy : ";
+		cout << "\nBook : " << t ->label << "\n\tChapter : " << t->child[i]->label;
+		cout << "\n\t\tSection : " << t ->child[i]->child[j]->label;
+		break;
+	      }
+	  }
+    }
+  if (type == 1 && flagChap == 0)
+    {
+      cout << "\nChapter not found";
+    }
+  else if (type == 2 && flagSec == 0)
+    {
+      cout << "\nSection not found";
+    }
+}
+
+void
+library::del (struct GTnode *t, char key[], int type)
+{
+  int flagChap = 0, flagSec = 0;
+
+  for (int i = 0; i < t->child_count; i++)
+    {
+      if (type == 1)
+	if (!strcmp (t->child[i]->label, key))
+	  {
+	    flagChap = 1;
+	    chapCount--;
+	    strcpy (t->child[i]->label, "--");
+ /**********************/
+	    for (int j = 0; j < t->child[i]->child_count; j++)
+	      {
+		if (strcmp (t->child[i]->child[j] ->label, "--"))
+		  {
+		    strcpy (t->child[i]->child[j] ->label, "--");
+		    secCount--;
+		  }
+	      }
+
+ /**********************/
+	    break;
+	  }
+      if (type == 2)
+	for (int j = 0; j < t->child[i]->child_count; j++)
+	  {
+	    if (!strcmp (t->child[i]->child[j] ->label, key))
+	      {
+		flagSec = 1;
+		secCount--;
+		strcpy (t->child[i]->child[j] ->label, "--");
+		break;
+	      }
+	  }
+    }
+  if (type == 1 && flagChap == 0)
+    {
+      cout << "\nChapter not found";
+    }
+  else if (type == 2 && flagSec == 0)
+    {
+      cout << "\nSection not found";
+    }
+  else
+    {
+      cout << "\nDeletion successful";
+    }
+}
+
+void
+library::display (struct GTnode *t)
+{
+  cout << "\nBook details :";
+  cout << "\nName : " << t->label;
+  cout << "\n\tChapters :";
+  for (int i = 0; i < t->child_count; i++)
+    {
+      cout << "\n\t" << i + 1 << ". " << t->child[i] ->label;
+      cout << "\n\t\tSections :";
+      for (int j = 0; j < t->child[i]->child_count; j++)
+	{
+	  cout << "\n\t\t" << j + 1 << ". " << t ->child[i]->child[j]->label;
+	}
+    }
+  cout << "\n\nBook Summary :";
+  cout << "\nTotal number of chapters :" << chapCount;
+  cout << "\nTotal number of sections :" << secCount << endl << endl;
+}
+
+int
+main ()
+{
+  int choice;
+  library *b1 = new library;
+  while (1)
+    {
+      cout << "\n-----------------------" << endl;
+      cout << "\nBook Hierarchy Creation" << endl;
+      cout << "\n-----------------------" << endl;
+      cout << "\n1. Create tree to store book details" << endl;
+      cout << "\n2. Display book details" << endl;
+      cout << "\n3. Search a book detail" << endl;
+      cout << "\n4. Insert a new book detail" << endl;
+      cout << "\n5. Delete a book detail " << endl;
+      cout << "\n6. Quit" << endl;
+      cout << "\nEnter your choice : ";
+      cin >> choice;
+      switch (choice)
+	{
+	case 1:
+	  b1->create ();
+	  break;
+	case 2:
+	  if (b1->root)
+	    b1->display (b1->root);
+	  else
+	    cout << "\nBook Details not available";
+	  break;
+	case 3:
+	  if (b1->root)
+	    {
+	      int ch;
+	      char key[30];
+
+	      cout << "\nWhat do you want to search? ";
+	      cout << "\n1. Chapter\n2. Section";
+	      cout << "\nEnter choice : ";
+	      cin >> ch;
+	      cout << "\nEnter name of the chapter/section to be searched : ";
+	      cin >> key;
+	      b1->search (b1 ->root, key, ch);
+	    }
+	  else
+	    cout << "\nBook Details not available";
+
+	  break;
+	case 5:
+	  if (b1->root)
+	    {
+	      int ch;
+	      char key[30];
+
+	      cout << "\nWhat do you want to delete?";
+	      cout << "\n1. Chapter\n2.Section";
+	      cout << "\nEnter choice : ";
+	      cin >> ch;
+
+	      cout << "\nEnter name of the chapter/section to be deleted : ";
+	      cin >> key;
+	      b1->del (b1->root, key, ch);
+	    }
+	  else
+	    cout << "\nBook Details not available";
+	  break;
+
+	case 4:
+	  if (b1->root)
+	    {
+	      int ch;
+	      char chapName[30];
+	      char secName[30] = " ";
+
+	      cout << "\nWhat do you want to insert?";
+	      cout << "\n1. Chapter\n2.Section";
+	      cout << "\nEnter choice : ";
+	      cin >> ch;
+
+	      if (ch == 1)
+		{
+		  cout << "\nEnter the name of the chapter ";
+		  cin >> chapName;
+		}
+
+	      if (ch == 2)
+		{
+		  cout <<
+		    "\nEnterchapter name in which you want to insert thesection ";
+		  cin >> chapName;
+		  cout << "\nEnter nameof the section to be inserted";
+		  cin >> secName;
+		}
+	      b1->insert (b1 ->root, chapName, secName, ch);
+	    }
+	  else
+	    cout << "\nBook Details not available";
+	  break;
+
+	case 6:
+	  delete b1;
+	  exit (1);
+	default:
+	  cout << "Wrong choice!" << endl;
+	  break;
+	}
+    }
+}
+
+OUTPUT::
+-----------------------
+
+Book Hierarchy Creation
+
+-----------------------
+
+1. Create tree to store book details
+
+2. Display book details
+
+3. Search a book detail
+
+4. Insert a new book detail
+
+5. Delete a book detail 
+
+6. Quit
+
+Enter your choice : 1
+
+Enter the name of the book : Harry Potter
+
+	Enter the number of chapters : 3
+
+	Enter the name of the chapter 1: childhood                             
+
+		Enter the number of sections : 2
+
+		Enter the name of the section 1: fun
+
+		Enter the name of the section 2: hagrid       
+
+	Enter the name of the chapter 2: Hogwards
+
+		Enter the number of sections : 2
+
+		Enter the name of the section 1: study
+
+		Enter the name of the section 2: match
+
+	Enter the name of the chapter 3: war
+
+		Enter the number of sections : 2
+
+		Enter the name of the section 1: lord
+
+		Enter the name of the section 2: snape
+
+-----------------------
+
+Book Hierarchy Creation
+
+-----------------------
+
+1. Create tree to store book details
+
+2. Display book details
+
+3. Search a book detail
+
+4. Insert a new book detail
+
+5. Delete a book detail 
+
+6. Quit
+
+Enter your choice : 2
+
+Book details :
+Name : Harry Potter
+	Chapters :
+	1. childhood
+		Sections :
+		1. fun
+		2. Hagrid
+	2. Hogwards
+		Sections :
+		1. study
+		2. Match
+	3. War
+		Sections :
+		1. Lord
+		2. Snape
+
+Book Summary :
+Total number of chapters :3
+Total number of sections :6
+
+
+-----------------------
+
+Book Hierarchy Creation
+
+-----------------------
+
+1. Create tree to store book details
+
+2. Display book details
+
+3. Search a book detail
+
+4. Insert a new book detail
+
+5. Delete a book detail 
+
+6. Quit
+
+Enter your choice : 3
+
+What do you want to search? 
+1. Chapter
+2. Section
+Enter choice : 2
+
+Enter name of the chapter/section to be searched : lord
+
+Section found as per the following hierarchy : 
+Book : harry Potter
+	Chapter : war
+		Section : lord
+-----------------------
+
+Book Hierarchy Creation
+
+-----------------------
+
+1. Create tree to store book details
+
+2. Display book details
+
+3. Search a book detail
+
+4. Insert a new book detail
+
+5. Delete a book detail 
+
+6. Quit
+
+Enter your choice : 4
+
+What do you want to insert?
+1. Chapter
+2.Section
+Enter choice : 2
+
+Enterchapter name in which you want to insert thesection adult
+
+Enter nameof the section to be inserted friends
+
+Section Inserted successfully 
+-----------------------
+
+Book Hierarchy Creation
+
+-----------------------
+
+1. Create tree to store book details
+
+2. Display book details
+
+3. Search a book detail
+
+4. Insert a new book detail
+
+5. Delete a book detail 
+
+6. Quit
+
+Enter your choice : 2
+
+Book
+Name : Harry Potter
+	Chapters :
+	1. childhood
+		Sections :
+		1. fun
+		2. Hagrid
+	2. Hogwards
+		Sections :
+		1. study
+		2. Match
+	3. War
+		Sections :
+		1. Lord
+		2. Snape
+        3.Black
+
+
+
+
+Book Summary :
+Total number of chapters :3
+Total number of sections :7
+
+
+-----------------------
+
+Book Hierarchy Creation
+
+-----------------------
+
+1. Create tree to store book details
+
+2. Display book details
+
+3. Search a book detail
+
+4. Insert a new book detail
+
+5. Delete a book detail 
+
+6. Quit
+
+Enter your choice : 6
+
+-------------------------------- 
+Process exited after 180.9 seconds with return value 1 
+Press any key to continue . . . 
+
+

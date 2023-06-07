@@ -1,0 +1,118 @@
+#include<iostream>
+
+using namespace std;
+
+class business
+{
+int a[15][15],first,last,cost,office,phoneline,visited[15];
+public:
+void Input();
+void Display();
+void Min();
+};
+
+void business::Input()
+{
+cout<<"Enter the number of branches: ";
+cin>>office;
+
+for(int i=0;i<office;i++)
+{
+visited[i]=0;
+for(int j=0;j<office;j++)
+{
+a[i][j]=999;
+}
+}
+
+cout<<"\nEnter the number of connections: ";
+cin>>phoneline;
+
+for(int i=0;i<phoneline;i++)
+{
+cout<<"Enter the end branches of connections:  "<<endl;
+cin>>first>>last;
+cout<<"Enter the phone company charges for this connection:  ";
+cin>>cost;
+a[first-1][last-1]=a[last-1][first-1]=cost;
+}
+}
+
+void business::Display()
+{
+cout<<"\nAdjacency Matrix:";
+for(int i=0;i<office;i++)
+{
+cout<<endl;
+for(int j=0;j<office;j++)
+{
+cout<<a[i][j]<<"   ";
+}
+cout<<endl;
+}
+}
+
+void business::Min()
+{
+int p=0,q=0,total=0,min,i,j;
+visited[0]=1;
+for(int count=0;count<(office-1);count++)
+{
+min=999;
+for(i=0;i<office;i++)
+{
+if(visited[i]==1)
+{
+for(j=0;j<office;j++)
+{
+if(visited[j]!=1)
+{
+if(min > a[i][j])
+{
+min=a[i][j];
+p=i;
+q=j;
+}
+}
+}
+}
+}
+visited[p]=1;
+visited[q]=1;
+total=total+min;
+cout<<"Minimum cost connection is"<<(p+1)<<" -> "<<(q+1)<<"  with charge : "<<min<< endl;
+
+}
+cout<<"The minimum total cost of connections of all branches is: "<<total<<endl;
+}
+
+int main()
+{
+int ch;
+business b;
+do
+{
+cout<<" Prims Algorithm "<<endl;
+cout<<"\n1.INPUT\n \n2.DISPLAY\n \n3.MIN\n"<<endl;
+cout<<"Enter your choice :"<<endl;
+cin>>ch;
+
+switch(ch)
+{
+case 1: cout<<"Input Values"<<endl;
+b.Input();
+break;
+
+case 2: cout<<"Display Contents"<<endl;
+b.Display();
+break;
+
+case 3: cout<<"MIN"<<endl;
+b.Min();
+break;
+}
+
+}while(ch!=4);
+return 0;
+}
+

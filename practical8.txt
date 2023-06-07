@@ -1,0 +1,135 @@
+// DSA practical 8
+/*Name : Prajwal Gajendra Ratnaparkhi
+SE-A 2146*/
+
+#include <stdio.h>
+#include <iostream>
+#include <string.h>
+#define MAX 10
+char s[MAX][20];
+#define INT_MAX 9999
+using namespace std;
+int SerachMinValue(float c[MAX][MAX], int i, int j)
+{
+int ReturnValue = 0, min = INT_MAX;
+for (int k = i + 1; k <= j; k++)
+{
+cout << "\n k=i+1= " << k << endl;
+if (min > (c[i][k - 1] + c[k][j]))
+{
+// cout<<"min>(c["<<i<<"]["<<k-1<<"]+c["<<k<<"]["<<j<<"])"<<endl;
+min = c[i][k - 1] + c[k][j];
+// cout<<"\nmin= "<<min<<"c["<<i<<" ]["<<k-1<<"<<"]+c["<<k<<"]["<<j<<"]"<<endl;
+ReturnValue = k;
+}
+}
+return ReturnValue;
+}
+void obst(int n, float p[MAX], float q[MAX])
+{
+float w[MAX][MAX], c[MAX][MAX], r[MAX][MAX];
+int i, j, k;
+for (i = 0; i <= n; i++)
+{
+for (j = 0; j <= n; j++)
+{
+c[i][j] = INT_MAX;
+}
+}
+for (i = 0; i <= n; i++)
+{
+w[i][i] = q[i];
+c[i][i] = 0;
+r[i][i] = 0;
+}
+for (k = 1; k <= n; k++)
+{
+for (i = 0; i <= (n - k); i++)
+{
+j = i + k;
+w[i][j] = p[j] + q[j] + w[i][j - 1];
+int a = SerachMinValue(c, i, j);
+c[i][j] = w[i][j] + c[i][a - 1] + c[a][j];
+cout << "\n w[" << i << "][" << j << "]+c[" << i << "][" << a - 1 << "]+c[" << a << "][" << j << "]" << endl;
+r[i][j] = a;
+}
+}
+for (i = 0; i <= n; i++)
+cout << "w(" << i << "," << i << ")=" << w[i][i] << "\t";
+cout << endl;
+for (i = 0; i <= n; i++)
+cout << "c(" << i << "," << i << ")=" << c[i][i] << "\t";
+cout << endl;
+for (i = 0; i <= n; i++)
+cout << "r(" << i << "," << i << ")=" << r[i][i] << "\t";
+cout << "\n";
+for (j = 1; j <= n; j++)
+{
+for (i = 0, k = j; k <= n; i++, k++)
+cout << "w(" << i << "," << k << ")=" << w[i][k] << "\t";
+cout << endl;
+for (i = 0, k = j; k <= n; i++, k++)
+cout << "c(" << i << "," << k << ")=" << c[i][k] << "\t";
+cout << endl;
+for (i = 0, k = j; k <= n; i++, k++)
+cout << "r(" << i << "," << k << ")=" << r[i][k] << "\t";
+cout << endl;
+}
+cout << "\nMinimum Cost = " << c[0][n] << endl;
+}
+int accept(float p[MAX], float q[MAX])
+{
+int n, i;
+cout << "\t\t:::: Optimal Binary Search Tree (OBST) ::::" << "\n\nEnter the number of nodes : ";
+cin >> n;
+for (i = 1; i <= n; i++)
+{
+cout << "\nInput Node " << i << " : ";
+cin >> s[i];
+}
+for (i = 1; i <= n; i++)
+{
+cout << "\nEnter the successful probability P" << i << " : ";
+cin >> p[i];
+}
+for (i = 0; i <= n; i++)
+{
+cout << "\nEnter the unsuccessful probability Q" << i << " : ";
+cin >> q[i];
+}
+return n;
+}
+int main()
+{
+float p[MAX], q[MAX], n;
+n = accept(p, q);
+obst(n, p, q);
+}
+/*OUTPUT of the PROGRAM :
+:::: Optimal Binary Search Tree (OBST) ::::
+Enter the number of nodes : 3
+Input Node 1 : 1
+Input Node 2 : 2
+Input Node 3 : 3
+Enter the successful probability P1 : 0.01
+Enter the successful probability P2 : 0.1
+Enter the successful probability P3 : 0.05
+Enter the unsuccessful probability Q0 : 0.15
+Enter the unsuccessful probability Q1 : 0.1
+Enter the unsuccessful probability Q2 : 0.01
+Enter the unsuccessful probability Q3 : 0.5
+w(0,0)=0.15 w(1,1)=0.1 w(2,2)=0.01 w(3,3)=0.5
+c(0,0)=0 c(1,1)=0 c(2,2)=0 c(3,3)=0
+r(0,0)=0 r(1,1)=0 r(2,2)=0 r(3,3)=0
+w(0,1)=0.26 w(1,2)=0.21 w(2,3)=0.56
+c(0,1)=0.26 c(1,2)=0.21 c(2,3)=0.56
+r(0,1)=1 r(1,2)=2 r(2,3)=3
+w(0,2)=0.37 w(1,3)=0.76
+c(0,2)=0.58 c(1,3)=1.32
+r(0,2)=1 r(1,3)=2
+w(0,3)=0.92
+c(0,3)=1.74
+r(0,3)=2
+Minimum Cost = 1.74
+-------------------------------- Process exited after 33.82 seconds with return value 0
+Press any key to continue . . . SCREENSHOTS of the PROGRAM : */

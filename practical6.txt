@@ -1,0 +1,118 @@
+#include<iostream>
+using namespace std;
+class graphDS
+{
+int G[10][10]={};
+public:
+int n,e;
+int visited[10]={};
+graphDS()
+{
+cout<<"Program based on Graph Data Structure\n";
+}
+void create();
+void init();
+int findMinVertex(int [],int []);
+~graphDS()
+{
+cout<<"\n\nEnd of program";
+}
+};
+void graphDS::init()
+{
+for(int i=1; i<=10 ; i++)
+visited[i]=0;
+}
+int graphDS::findMinVertex(int value[] , int inMSTset[])
+{
+int min=9999;
+int minVertex;
+for(int i=1 ; i<=n ; i++)
+{
+if(value[i]<min && !inMSTset[i])
+{
+min=value[i];
+minVertex=i;
+}
+}
+return minVertex;
+}
+void graphDS::create()
+{
+int u,v,wt;
+cout<<"\nEnter the number of vertices : ";
+cin>>n;
+cout<<"\nEnter the number of edges : ";
+cin>>e;
+for(int i=1; i<=e; i++)
+{
+repeat:
+cout<<"\nEnter endpoint vertices (<="<<n<<") and weight of edge "<<i<<" : ";
+cin>>u>>v>>wt;
+if(!(0<u && u<=n && 0<v && v<=n))
+{
+cout<<"\nWrong input !";
+goto repeat;
+}
+G[u][v]=wt;
+G[v][u]=wt;
+}
+cout<<"\nAdjacency Matrix representation of the Graph is : \n";
+for(int i=1 ; i<=n ; i++)
+{
+for(int j=1 ; j<=n ; j++)
+{
+cout<<G[i][j]<<"\t";
+}
+cout<<endl;
+}
+}
+int main()
+{
+int s,ch,valid;
+char next;
+graphDS g;
+/*************************/
+do
+{
+cout<<"\nMenu driven program : ";
+cout<<"\n 1. Create graph";
+cout<<"\n Enter your choice : ";
+cin>>ch;
+switch(ch)
+{
+case 1: g.create();
+valid =1;
+break;
+default:
+cout<<"\nInvalid choice.";
+break;
+}
+cout<<"\n\nDo you want to continue ? (y/n) : ";
+cin>>next;
+cout<<endl;
+}while(next=='y' || next=='Y'); //OR 0<ch<4
+/*************************/
+return 0;
+}
+                                                                                  
+Output:-
+Menu driven program : 
+ 1. Create graph
+ Enter your choice : 1
+ Enter the number of vertices : 2
+ Enter the number of edges : 2
+ Enter endpoint vertices (<=2) and weight of edge 1 : 1
+ 1
+ 1
+ Enter endpoint vertices (<=2) and weight of edge 2 : 1
+ 1
+ 1
+ Adjacency Matrix representation of the Graph is : 
+1	0	
+0	0	
+
+
+Do you want to continue ? (y/n) : n
+End of program
+

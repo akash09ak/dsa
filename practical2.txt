@@ -1,0 +1,521 @@
+#include<iostream> 
+using namespace std;
+
+#define h(x) x%10 
+void wochain ();
+
+void woreplacement ();
+
+void wreplacement ();
+
+int
+main () 
+{
+  
+int ch;
+  
+  do
+    
+    {
+      
+cout << "\nMenu to implement hashing";
+      
+cout << "\n 1. without chain";
+      
+cout << "\n 2. with chain without replacement";
+      
+cout << "\n 3. with chain with replacement";
+      
+cout << "\n 4. Quit";
+      
+cout << "\n Enter your choice : ";
+      
+cin >> ch;
+      
+switch (ch)
+	
+	{
+	
+case 1:
+	  wochain ();
+	  
+break;
+	
+case 2:
+	  woreplacement ();
+	  
+break;
+	
+case 3:
+	  wreplacement ();
+	  
+break;
+	
+case 4:
+	  
+exit (1);
+	
+default:
+	  
+cout << "\nWrong Choice !";
+	  
+break;
+	
+}
+    
+}
+  while (ch != 4);
+  
+cout << "\nEnd of program";
+  
+return 0;
+
+}
+
+
+void
+wochain () 
+{
+  
+int data[10] = { }, flag[10] =
+  {
+  };
+  
+int loc, key, in;
+  
+int i, j;
+  
+cout << "\nEnter 5 elements : ";
+  
+for (i = 1; i <= 5; i++)
+    
+    {
+      
+cout << "\nenter data : ";
+      
+cin >> key;
+      
+loc = h (key);
+      
+if (flag[loc] == 0)
+	
+	{
+	  
+data[loc] = key;
+	  
+flag[loc] = 1;
+	
+}
+      
+      else
+	
+	{
+	  
+j = loc;
+	  in = 0;
+	  
+while (flag[j] == 1 && in < 10)
+	    
+	    {
+	      
+j = (j + 1) % 10;
+	      
+in++;
+	    
+}
+	  
+data[j] = key;
+	  
+flag[j] = 1;
+	
+}
+    
+}
+  
+cout << "\n" << "Data" << "\t||\t" << "flag";
+  
+for (i = 0; i < 10; i++)
+    
+    {
+      
+cout << "\n" << data[i] << "\t||\t" << flag[i];
+    
+}
+  
+int x;
+  
+cout << "\nenter data to search";
+  
+cin >> x;
+  
+for (i = 0; i < 10; i++)
+    
+    {
+      
+loc = h (x);
+      j = 0;
+      
+while (data[loc] != x && j < 10)
+	
+	{
+	  
+loc = (loc + 1) % 10;
+	  
+j++;
+	  
+if (data[loc] == x)
+	    
+break;
+	
+}
+    
+}
+  
+if (j == 10)
+    
+    {
+      
+cout << "\n data not present in hash table";
+    
+}
+  
+  else
+    
+cout << "\n data found and is present at : " << loc;
+
+}
+
+
+void
+woreplacement () 
+{
+  
+int data[10], flag[10], chain[10];
+  
+int loc, key, in;
+  
+int i, j;
+  
+for (i = 0; i < 10; i++)
+    
+    {
+      
+flag[i] = 0;
+      
+chain[i] = -1;
+      
+data[i] = 0;
+    
+}
+  
+cout << "\nEnter 5 elements : ";
+  
+for (i = 1; i <= 5; i++)
+    
+    {
+      
+cout << "\n enter data";
+      
+cin >> key;
+      
+loc = h (key);
+      
+if (flag[loc] == 0)
+	
+	{
+	  
+data[loc] = key;
+	  
+flag[loc] = 1;
+	
+}
+      
+      else
+	
+	{
+	  
+j = loc;
+	  in = 0;
+	  
+while (flag[j] == 1 && in < 10)
+	    
+	    {
+	      
+j = (j + 1) % 10;
+	      
+in++;
+	    
+}
+	  
+data[j] = key;
+	  
+flag[j] = 1;
+	  
+if (h (key) == h (data[loc]))
+	    
+	    {
+	      
+while (chain[loc] != -1)
+		
+loc = chain[loc];
+	      
+chain[loc] = j;
+	    
+}
+	
+}
+    
+}
+  
+cout << "\n" << "Data" << "\t||\t" << "flag" << "\t||\t" << "chain";
+  
+for (i = 0; i < 10; i++)
+    
+    {
+      
+cout << "\n" << data[i] << " \t||\t" << flag[i] << "\t||\t" <<
+	chain[i];
+    
+}
+  
+int x;
+  
+cout << "\nenter data to search";
+  
+cin >> x;
+  
+loc = h (x);
+  j = 0;
+  int myflag = 0;
+  
+while (data[loc] != x && j < 10)
+    
+    {
+      
+if (h (key) == h (data[loc]))
+	
+	{
+	  
+if (chain[loc] != -1)
+	    
+loc = chain[loc];
+	  
+	  else
+	    
+myflag = 1;
+	
+}
+      
+      else
+	
+loc = (loc + 1) % 10;
+      
+j++;
+    
+}
+  
+if (j == 10 || myflag == 1)
+    
+    {
+      
+cout << "\n data not present in hash table ! ";
+    
+}
+  
+  else
+    
+cout << "\n data found and is present at : " << loc;
+
+}
+
+
+void
+wreplacement () 
+{
+  
+int data[10], flag[10], chain[10];
+  
+int loc, key, in;
+  
+int i, j;
+  
+for (i = 0; i < 10; i++)
+    
+    {
+      
+flag[i] = 0;
+      
+chain[i] = -1;
+      
+data[i] = 0;
+    
+}
+  
+for (i = 1; i <= 5; i++)
+    
+    {
+      
+cout << "\n enter data";
+      
+cin >> key;
+      
+loc = h (key);
+      
+if (flag[loc] == 0)
+	
+	{
+	  
+data[loc] = key;
+	  
+flag[loc] = 1;
+	
+}
+      
+      else
+	
+	{
+	  
+j = loc;
+	  in = 0;
+	  
+while (flag[j] == 1 && in < 10)
+	    
+	    {
+	      
+j = (j + 1) % 10;
+	      
+in++;
+	    
+}
+	  
+if (in == 10)
+	    
+cout << "\nhashtable is full";
+	  
+	  else
+	    
+	    {
+	      
+if (h (key) == h (data[loc]))
+		
+		{
+		  
+data[j] = key;
+		  
+flag[j] = 1;
+		  
+while (chain[loc] != -1)
+		    
+loc = chain[loc];
+		  
+chain[loc] = j;
+		
+}
+	      
+	      else
+		
+		{
+		  
+data[j] = data[loc];
+		  
+flag[j] = 1;
+		  
+data[loc] = key;
+		  
+int n;
+		  
+n = h (data[j]);
+		  
+while (chain[n] != loc)
+		    
+n = chain[n];
+		  
+chain[n] = chain[loc];
+		  
+chain[loc] = -1;
+		  
+n = h (data[j]);
+		  
+while (chain[n] != -1)
+		    
+n = chain[n];
+		  
+chain[n] = j;
+		
+}
+	    
+}
+	
+}
+    
+}
+  
+cout << "\n" << "Data" << "\t||\t" << "flag" << "\t||\t" << "chain";
+  
+for (i = 0; i < 10; i++)
+    
+    {
+      
+cout << "\n" << data[i] << "\t||\t" << flag[i] << "\t||\t" << chain[i];
+    
+}
+  
+int x;
+  
+cout << "\nenter data to search";
+  
+cin >> x;
+  
+loc = h (x);
+  
+j = 0;
+  
+int myflag = 0;
+  
+ 
+while (data[loc] != x && j < 10)
+    
+    {
+      
+ 
+if (h (key) == h (data[loc]))
+	
+	{
+	  
+if (chain[loc] != -1)
+	    
+loc = chain[loc];
+	  
+	  else
+	    
+	    {
+	      
+cout << "\ndata not present";
+	      
+myflag = 1;
+	      
+break;
+	    
+}
+	
+}
+      
+      else
+	
+	{
+	  
+loc = (loc + 1) % 10;
+	  
+j++;
+	
+}
+    
+}
+  
+if (myflag == 0)
+    
+cout << "\n data found and is present at : " << loc;
+
+}
+
+
